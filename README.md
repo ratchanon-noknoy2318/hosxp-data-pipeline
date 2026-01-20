@@ -51,7 +51,7 @@
 | โฟลเดอร์/ไฟล์ | หน้าที่ |
 | :--- | :--- |
 | `src/app.py` | ไฟล์หลักสำหรับรัน Streamlit Dashboard |
-| `data/` | โฟลเดอร์เก็บไฟล์ข้อมูล (CSV, Parquet) |
+
 | `requirements.txt` | รายชื่อ Library ทั้งหมดที่ต้องใช้ |
 | `README.md` | เอกสารอธิบายโปรเจกต์ |
 
