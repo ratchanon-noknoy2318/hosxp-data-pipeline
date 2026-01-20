@@ -6,7 +6,7 @@
 pip install streamlit
 ```
 ```bash
-streamlit run your_file.py
+streamlit run health_dashboard.py
 ```
 
 ## ภาพตัวอย่าง (Screenshots)
