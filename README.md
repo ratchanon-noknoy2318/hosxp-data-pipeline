@@ -26,5 +26,5 @@
 ### Quick Start & Contact
 - **Setup:** `pip install -r requirements.txt`
 - **Run:** `python main.py`
-- **License:** MIT © 2026 Ratchanon Noknoy
+- **Project Activity Details:** [Activity Details](https://drive.google.com/file/d/1DOoV5dL3MxNVcWfKgINcHnSXXz-lEgxQ/view)
 - **Connect:** [LinkedIn](https://www.linkedin.com/in/ratchanon-noknoy/) | [GitLab](https://gitlab.com/ratchanon.noknoy2318)
