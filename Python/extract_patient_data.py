@@ -1,22 +1,24 @@
 import pymysql
 import pandas as pd
+from datetime import datetime
 
-# 1. ตั้งค่าการเชื่อมต่อ (ปรับให้ตรงกับ Server ของคุณ)
+# 1. ตั้งค่าการเชื่อมต่อฐานข้อมูล
 db_config = {
     'host': 'localhost',
     'user': 'admin',
     'password': '123456',
-    'database': 'hosxp', # เปลี่ยนเป็นชื่อ DB ของคุณ
+    'database': 'hosxp',
     'port': 3306,
     'charset': 'utf8'
 }
 
-def export_patient_data():
+def export_full_report():
     try:
         # 2. เชื่อมต่อ MySQL
+        print("Connecting to Database...")
         conn = pymysql.connect(**db_config)
         
-        # 3. ใส่ SQL Query ที่คุณให้มา
+        # 3. SQL Query (ชุดที่คุณให้มา)
         sql_query = """
         SELECT
             person.prename AS `คํานําหน้า`,
@@ -33,9 +35,7 @@ def export_patient_data():
             person.hnomoi AS `บ้านเลขที่`,
             house.road AS `ชื่อถนน`,
             house.xgis AS `ละติจูด`,
-            house.ygis AS `ลองติจูด`,
-            '' AS `ประเภทผู้ป่วย`,
-            '' AS หนังสือเดินทาง
+            house.ygis AS `ลองติจูด`
         FROM
             person
         INNER JOIN house ON person.hcode = house.hcode
@@ -45,21 +45,50 @@ def export_patient_data():
             person.dischargetype = '9'
         """
         
-        # 4. ใช้ Pandas อ่านข้อมูลจาก SQL
-        print("กำลังดึงข้อมูลจากระบบ Buddy-Care...")
+        # 4. ดึงข้อมูลเข้า Pandas DataFrame
         df = pd.read_sql(sql_query, conn)
+        print(f"ดึงข้อมูลมาได้ทั้งหมด: {len(df)} รายการ")
+
+        # --- [ 5. ส่วนจัดการข้อมูล (Data Transformation) ] ---
         
-        # 5. แสดงผล 5 แถวแรก
-        print(df.head())
+        # ก. รวมชื่อ-นามสกุล และลบช่องว่าง
+        df['ชื่อ-นามสกุล'] = df['ชื่อ'].str.strip() + " " + df['นามสกุล'].str.strip()
         
-        # 6. ส่งออกเป็นไฟล์ Excel
-        df.to_excel("patient_data.xlsx", index=False)
-        print("บันทึกไฟล์ patient_data.xlsx สำเร็จ!")
+        # ข. แปลงเพศ 1, 2 เป็น ชาย, หญิง
+        df['เพศ'] = df['เพศ'].replace({1: 'ชาย', 2: 'หญิง', '1': 'ชาย', '2': 'หญิง'})
+        
+        # ค. คำนวณอายุ (ปีปัจจุบัน - ปีเกิด)
+        this_year = datetime.now().year + 543  # ใช้ปี พ.ศ.
+        df['อายุ'] = this_year - df['ปีเกิด'].fillna(this_year).astype(int)
+        
+        # ง. จัดการค่าว่าง (Null) ให้ดูสวยงาม
+        df['ชื่อถนน'] = df['ชื่อถนน'].fillna('-')
+        df['ละติจูด'] = df['ละติจูด'].fillna(0)
+        df['ลองติจูด'] = df['ลองติจูด'].fillna(0)
+
+        # จ. เลือกและเรียงลำดับคอลัมน์ที่จะเอาลง Excel
+        final_columns = [
+            'คํานําหน้า', 'ชื่อ-นามสกุล', 'เพศ', 'อายุ', 
+            'เลขบัตรประชาชน', 'ชื่อหมู่บ้าน', 'บ้านเลขที่', 
+            'ชื่อถนน', 'ละติจูด', 'ลองติจูด'
+        ]
+        df_final = df[final_columns]
+
+        # --- [ 6. ส่งออกเป็นไฟล์ Excel ] ---
+        filename = "Buddy_Care_Report.xlsx"
+        
+        # ใช้ Engine 'openpyxl' (ต้องติดตั้งด้วย: pip install openpyxl)
+        df_final.to_excel(filename, index=False, sheet_name='Data_Patient')
+        
+        print("-" * 30)
+        print(f"สำเร็จ! ไฟล์ถูกบันทึกที่: {filename}")
+        print("-" * 30)
 
     except Exception as e:
         print(f"เกิดข้อผิดพลาด: {e}")
     finally:
-        conn.close()
+        if 'conn' in locals():
+            conn.close()
 
 if __name__ == "__main__":
-    export_patient_data()
+    export_full_report()
