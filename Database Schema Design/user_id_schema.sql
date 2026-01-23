@@ -6,8 +6,6 @@ CREATE TABLE patients (
     birth_year INT,
     age INT,
     gender INT COMMENT '1=ชาย, 2=หญิง',
-    district VARCHAR(100),
-    provider VARCHAR(50) NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;

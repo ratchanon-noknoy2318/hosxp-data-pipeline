@@ -1,4 +1,4 @@
-### ตารางหลัก
+### Patients
 
 | HOSxP Field (`person` table) | `patients` Table Field | Type | Description |
 | :--- | :--- | :--- | :--- |
