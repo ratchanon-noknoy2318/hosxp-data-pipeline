@@ -1,3 +1,5 @@
+-- Activity: Training on the Buddy-Care System
+
 SELECT
 person.prename AS `คํานําหน้า`,
 person.fname AS `ชื่อ`,
