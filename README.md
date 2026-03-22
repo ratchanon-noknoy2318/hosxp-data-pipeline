@@ -69,8 +69,9 @@ SELECT
   o.vstdate,
   COUNT(DISTINCT o.vn) AS visit_count
 FROM ovst o
+WHERE o.vstdate BETWEEN '2025-03-01' AND '2025-09-30'
 GROUP BY o.vstdate
-ORDER BY o.vstdate;
+ORDER BY o.vstdate DESC;
 ```
 
 ---
