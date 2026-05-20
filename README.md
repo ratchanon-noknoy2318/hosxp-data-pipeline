@@ -14,3 +14,5 @@
 | `sex`           | Gender reference                   |
 | `icd101`        | ICD-10 master data                 |
 | `kskdepartment` | Department master data             |
+
+LinkedIn Post: https://www.linkedin.com/posts/ratchanon-noknoy_healthcaredata-dataengineering-healthtech-share-7456534276168282112-Qn8r
